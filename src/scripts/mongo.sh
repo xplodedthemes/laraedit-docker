@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
-if [ -f /home/vagrant/.mongo ]
+if [ -f /home/.mongo ]
 then
     echo "MongoDB already installed."
     exit 0
 fi
 
-touch /home/vagrant/.mongo
+touch /home/.mongo
 
 sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6 2>&1
 
