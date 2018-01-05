@@ -50,7 +50,7 @@ RUN rm -rf /etc/nginx/sites-available/default && \
     usermod -u 1000 www-data && \
     chown -Rf www-data.www-data /var/www/html/ && \
     sed -i -e"s/worker_processes  1/worker_processes 5/" /etc/nginx/nginx.conf
-VOLUME ["/var/www/html/app"]
+VOLUME ["/var/www/app"]
 VOLUME ["/var/cache/nginx"]
 VOLUME ["/var/log/nginx"]
 
@@ -134,9 +134,15 @@ RUN apt-get install -y --force-yes beanstalkd && \
 
 # install supervisor
 RUN apt-get install -y supervisor && \
-    mkdir -p /var/log/supervisor
-COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-VOLUME ["/var/log/supervisor"]
+    mkdir -p /var/log/supervisor && \
+    COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf && \
+    VOLUME ["/var/log/supervisor"]
+
+# install ngrok
+RUN PATH_NGROK="/home/.ngrok2"  && \
+    PATH_CONFIG="${PATH_NGROK}/ngrok.yml" && \
+    # Only create a ngrok config file if there isn't one already there. && \
+    if [ ! -f $PATH_CONFIG ] then mkdir -p $PATH_NGROK && echo "web_addr: $1:4040" > $PATH_CONFIG fi
 
 # clean up our mess
 RUN apt-get remove --purge -y software-properties-common && \
