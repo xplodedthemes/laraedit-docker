@@ -1,9 +1,9 @@
-FROM ubuntu:16.04
-MAINTAINER Georges Haddad <prismosoft@gmail.com>
+FROM ubuntu:14.04
+MAINTAINER Derek Bourgeois <derek@ibourgeois.com>
 
 # set some environment variables
 ENV APP_NAME app
-ENV APP_EMAIL info@app.dev
+ENV APP_EMAIL app@laraedit.com
 ENV APP_DOMAIN app.dev
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -50,38 +50,35 @@ RUN rm -rf /etc/nginx/sites-available/default && \
     usermod -u 1000 www-data && \
     chown -Rf www-data.www-data /var/www/html/ && \
     sed -i -e"s/worker_processes  1/worker_processes 5/" /etc/nginx/nginx.conf
-VOLUME ["/var/www/app"]
+VOLUME ["/var/www/html/app"]
 VOLUME ["/var/cache/nginx"]
 VOLUME ["/var/log/nginx"]
 
 # install php
-RUN apt-get install -y --force-yes php7.2-fpm php7.2-cli php7.2-dev php7.2-pgsql php7.2-sqlite3 php7.2-gd \
-    php-apcu php7.2-curl php7.2-mcrypt php7.2-imap php7.2-mysql php7.2-readline php-xdebug php-common \
-    php7.2-mbstring php7.2-xml php7.2-zip
-RUN sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.2/cli/php.ini && \
-    sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.2/cli/php.ini && \
-    sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.2/cli/php.ini && \
-    sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.2/fpm/php.ini && \
-    sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.2/fpm/php.ini && \
-    sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.2/fpm/php.ini && \
-    sed -i "s/upload_max_filesize = .*/upload_max_filesize = 100M/" /etc/php/7.2/fpm/php.ini && \
-    sed -i "s/post_max_size = .*/post_max_size = 100M/" /etc/php/7.2/fpm/php.ini && \
-    sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.2/fpm/php.ini && \
-    sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.2/fpm/php-fpm.conf && \
-    sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" /etc/php/7.2/fpm/pool.d/www.conf && \
-    sed -i -e "s/pm.max_children = 5/pm.max_children = 9/g" /etc/php/7.2/fpm/pool.d/www.conf && \
-    sed -i -e "s/pm.start_servers = 2/pm.start_servers = 3/g" /etc/php/7.2/fpm/pool.d/www.conf && \
-    sed -i -e "s/pm.min_spare_servers = 1/pm.min_spare_servers = 2/g" /etc/php/7.2/fpm/pool.d/www.conf && \
-    sed -i -e "s/pm.max_spare_servers = 3/pm.max_spare_servers = 4/g" /etc/php/7.2/fpm/pool.d/www.conf && \
-    sed -i -e "s/pm.max_requests = 500/pm.max_requests = 200/g" /etc/php/7.2/fpm/pool.d/www.conf && \
-    sed -i -e "s/;listen.mode = 0660/listen.mode = 0750/g" /etc/php/7.2/fpm/pool.d/www.conf && \
-    find /etc/php/7.2/cli/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
+RUN apt-get install -y --force-yes php7.0-fpm php7.0-cli php7.0-dev php7.0-pgsql php7.0-sqlite3 php7.0-gd \
+    php-apcu php7.0-curl php7.0-mcrypt php7.0-imap php7.0-mysql php7.0-readline php-xdebug php-common \
+    php7.0-mbstring php7.0-xml php7.0-zip
+RUN sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/cli/php.ini && \
+    sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.0/cli/php.ini && \
+    sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.0/cli/php.ini && \
+    sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.0/fpm/php.ini && \
+    sed -i "s/display_errors = .*/display_errors = On/" /etc/php/7.0/fpm/php.ini && \
+    sed -i "s/;cgi.fix_pathinfo=1/cgi.fix_pathinfo=0/" /etc/php/7.0/fpm/php.ini && \
+    sed -i "s/upload_max_filesize = .*/upload_max_filesize = 100M/" /etc/php/7.0/fpm/php.ini && \
+    sed -i "s/post_max_size = .*/post_max_size = 100M/" /etc/php/7.0/fpm/php.ini && \
+    sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.0/fpm/php.ini && \
+    sed -i -e "s/;daemonize\s*=\s*yes/daemonize = no/g" /etc/php/7.0/fpm/php-fpm.conf && \
+    sed -i -e "s/;catch_workers_output\s*=\s*yes/catch_workers_output = yes/g" /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i -e "s/pm.max_children = 5/pm.max_children = 9/g" /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i -e "s/pm.start_servers = 2/pm.start_servers = 3/g" /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i -e "s/pm.min_spare_servers = 1/pm.min_spare_servers = 2/g" /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i -e "s/pm.max_spare_servers = 3/pm.max_spare_servers = 4/g" /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i -e "s/pm.max_requests = 500/pm.max_requests = 200/g" /etc/php/7.0/fpm/pool.d/www.conf && \
+    sed -i -e "s/;listen.mode = 0660/listen.mode = 0750/g" /etc/php/7.0/fpm/pool.d/www.conf && \
+    find /etc/php/7.0/cli/conf.d/ -name "*.ini" -exec sed -i -re 's/^(\s*)#(.*)/\1;\2/g' {} \;
 COPY fastcgi_params /etc/nginx/
 RUN phpenmod mcrypt && \
     mkdir -p /run/php/ && chown -Rf www-data.www-data /run/php
-
-# install pcntl 
-RUN docker-php-ext-install pcntl
 
 # install sqlite 
 RUN apt-get install -y sqlite3 libsqlite3-dev
@@ -134,15 +131,9 @@ RUN apt-get install -y --force-yes beanstalkd && \
 
 # install supervisor
 RUN apt-get install -y supervisor && \
-    mkdir -p /var/log/supervisor && \
-    COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf && \
-    VOLUME ["/var/log/supervisor"]
-
-# install ngrok
-RUN PATH_NGROK="/home/.ngrok2"  && \
-    PATH_CONFIG="${PATH_NGROK}/ngrok.yml" && \
-    # Only create a ngrok config file if there isn't one already there. && \
-    if [ ! -f $PATH_CONFIG ] then mkdir -p $PATH_NGROK && echo "web_addr: $1:4040" > $PATH_CONFIG fi
+    mkdir -p /var/log/supervisor
+COPY supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+VOLUME ["/var/log/supervisor"]
 
 # clean up our mess
 RUN apt-get remove --purge -y software-properties-common && \
