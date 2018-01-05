@@ -9,7 +9,7 @@ You can find the latest build details on the [Docker Hub](https://hub.docker.com
 
 # What works
 - [x] Nginx 1.8.1
-- [x] PHP 7.0
+- [x] PHP 7.2
 - [x] SQLite
 - [x] MySQL 5.7
 - [x] Redis
@@ -20,6 +20,7 @@ You can find the latest build details on the [Docker Hub](https://hub.docker.com
 - [x] Bower
 - [x] Gulp
 - [x] Composer
+- [x] NGROK
 - [x] Laravel Envoy
 - [x] Laravel Installer
 - [ ] Lumen Installer
